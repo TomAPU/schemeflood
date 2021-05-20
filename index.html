@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <button onclick="startdetection();">一键获取安装过的程序</button>
+    <br>
+    <textarea rows="30" cols="30" id="notinstall">未安装:</textarea>
+    <textarea rows="30" cols="30" id="installed">已安装（或者安装过）:</textarea>
+    <h1>基于<a href="https://fingerprintjs.com/blog/external-protocol-flooding/">Schemeflood</a>技术实现对已安装的软件进行探测</h1>
+    <h1>已在Windows+Chrome90的环境测试，测试时不要移出这个界面以确保结果准确</h1>
+    <h1>测试结果不会上传，本页面开源，请放心测试</h1>
+    <!--真不会写前端，就这样吧-->
+</head>
+<body>
+
+    <script>
+
+    function sleep(ms) 
+    {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+
+    async function startdetection()
+    {
+        handler = window.open('about:blank', '', 'width=50,height=50,left=9999,top=9999')
+        appnames=['Skype', 'Spotify', 'Zoom', 'vscode', 'Epic Games', 'Telegram', 'Discord', 'Slack', 'Steam', 'Battle.net', 'Xcode', 'NordVPN', 'Sketch', 'Teamviewer', 'Microsoft Word', 'WhatsApp', 'Postman', 'Adobe', 'Messenger', 'Figma', 'Hotspot Shield', 'ExpressVPN', 'Notion', 'iTunes','Tim','百度网盘','BinaryNinja','evernote','github desktop','onenote','QQ','腾讯会议','xmind','Vmware','360软件管家','acrobat','QQ游戏']
+        schemes=['skype', 'spotify', 'zoommtg', 'vscode', 'com.epicgames.launcher', 'tg', 'discord', 'slack', 'steam', 'battlenet', 'xcode', 'nordvpn', 'sketch', 'teamviewerapi', 'word', 'whatsapp', 'postman', 'aem-asset', 'messenger', 'figma', 'hotspotshield', 'expressvpn', 'notion', 'itunes','Tencent','Baiduyunguanjia','BinaryNinja','evernote','github-windows','onenote','QQ','wwauth3rd3a82ac41e00d815d','xmind','vm','softmanager360','acrobat','QQGameProtocol']
+        for(var i=0;i<appnames.length;i++)
+        {
+            appname=appnames[i];
+            scheme=schemes[i];
+            let isDetected=true;
+            await sleep(125) 
+            input = document.createElement('input')
+            input.style.opacity = '0'
+            input.style.position = 'absolute'
+            input.onfocus = () => { isDetected = false }
+            await sleep(125) 
+            handler.document.body.appendChild(input);
+            handler.location.replace(scheme+"://Message")
+            await sleep(125) 
+            input.focus()
+            await sleep(125)
+            input.remove()
+            if(isDetected)
+                output=document.getElementById('installed')
+            else 
+                output=document.getElementById('notinstall')
+            output.value+='\n'+appname
+            handler.location.replace("about:blank")
+        }
+        handler.close()
+    }
+
+    </script>
+</body>
+</html>
